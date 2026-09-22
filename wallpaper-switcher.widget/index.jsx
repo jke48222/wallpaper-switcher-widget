@@ -1,4 +1,4 @@
-import { React } from "uebersicht";
+import { React, run } from "uebersicht";
 // --- Inlined design system (self-contained; formerly theme.js) ---
 // Shared design system for the widget set: color tokens, fonts, layout, the
 // common card shell, drag/resize handles, a last-known-good cache, and the
@@ -131,7 +131,7 @@ const card = (variant, w, h, x = 0, y = 0) => `
   .ws-drag  { position:absolute; top:6px; left:6px; z-index:30;
               width:18px; height:18px; border-radius:6px;
               display:flex; align-items:center; justify-content:center;
-              font-size:11px; line-height:1; cursor:grab; opacity:0.42;
+              font-size:11px; line-height:1; cursor:grab; opacity:0.22;
               transition:opacity .15s ease; user-select:none;
               -webkit-user-select:none;
               color:${variant === "dark" ? T.onDarkMute : T.inkMute};
@@ -143,7 +143,7 @@ const card = (variant, w, h, x = 0, y = 0) => `
   .ws-resize { position:absolute; bottom:5px; right:5px; z-index:30;
                width:16px; height:16px; border-radius:5px;
                display:flex; align-items:center; justify-content:center;
-               font-size:11px; line-height:1; cursor:nwse-resize; opacity:0.42;
+               font-size:11px; line-height:1; cursor:nwse-resize; opacity:0.22;
                transition:opacity .15s ease; user-select:none;
                -webkit-user-select:none;
                color:${variant === "dark" ? T.onDarkMute : T.inkMute};
@@ -344,6 +344,7 @@ const resolve = (key, props, parse, mock) => {
   return { data: mock, mock: true };
 };
 // --- End inlined design system ---
+
 // A wallpaper browser and setter, reading images from ~/Pictures/Wallpapers.
 //
 // Übersicht serves widgets over HTTP, so file:// images are blocked. The
@@ -366,43 +367,30 @@ export const command =
   `done`;
 
 export const refreshFrequency = 1000 * 60 * 5; // navigation is client-side; only re-scan for added/removed wallpapers
-const FONTS = "wallpaper-switcher.widget/fonts";
-// A photographer's light table: a brushed aluminium frame around a glowing
-// acrylic top, the chosen wallpaper in a cardboard 35 mm slide mount, the rest
-// as small mounts along the bottom. Buttons step, click a mount to select,
-// click the big slide to set it as the desktop picture.
-export const className = card("light", 320, 256, ...LAYOUT.swap) + `
-  @font-face { font-family: "Courier Prime"; src: url("${FONTS}/CourierPrime-400.woff2") format("woff2"); }
-  --mono: "Courier Prime", monospace;
-  padding: 0; border-radius: 8px; backdrop-filter: none; overflow: hidden; user-select:none; -webkit-user-select:none;
-  background: linear-gradient(180deg, #D9DBDE 0%, #BFC2C6 100%);
-  box-shadow: 0 30px 50px rgba(0,0,0,0.45), inset 0 1px 0 #fff, inset 0 0 0 1px #8F9399, inset 0 -1px 0 rgba(0,0,0,0.3);
-  &::before { content:""; position:absolute; inset:0; pointer-events:none; opacity: 0.5; background: repeating-linear-gradient(90deg, rgba(255,255,255,0.15) 0 1px, rgba(0,0,0,0) 1px 3px); }
-  .ws-drag { top: 0px; left: 0px; color: #4a4e55; background: rgba(0,0,0,0.06); } .ws-resize { bottom: 0px; right: 0px; color: #4a4e55; background: rgba(0,0,0,0.06); }
-  .glass { position:absolute; inset: 10px; border-radius: 4px; background: radial-gradient(ellipse 70% 60% at 50% 45%, #FFFFFF 0%, #F2F4F6 60%, #DDE1E6 100%); box-shadow: inset 0 0 0 1px #A9ADB3, inset 0 2px 8px rgba(0,0,0,0.25), 0 0 18px rgba(255,255,255,0.35); }
-  .glass::after { content:""; position:absolute; inset:0; border-radius: inherit; pointer-events:none; opacity: 0.55; mix-blend-mode: multiply; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E"); }
-  .mount { position:absolute; left: 92px; top: 20px; width: 136px; height: 136px; cursor:pointer; background: #F7F4EC; border-radius: 2px; transform: rotate(-1.5deg);
-           box-shadow: 0 6px 12px rgba(0,0,0,0.28), 0 0 0 0.5px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(0,0,0,0.05); }
-  .mount::before { content:"COLOR TRANSPARENCY"; position:absolute; left: 0; right: 0; top: 9px; text-align:center; font: 400 6.5px/1 var(--mono); letter-spacing: 1.4px; color: #B8322C; }
-  .mount::after { content:"PROCESSED · MOUNTED"; position:absolute; left: 0; right: 0; bottom: 8px; text-align:center; font: 400 6px/1 var(--mono); letter-spacing: 1px; color: #7A7466; }
-  .win { position:absolute; left: 14px; top: 30px; width: 108px; height: 72px; overflow:hidden; background: #111; box-shadow: inset 0 0 0 1px #000, 0 0 0 1px rgba(0,0,0,0.15); }
-  .img { width: 100%; height: 100%; object-fit: cover; display:block; }
-  .bg { width: 100%; height: 100%; background: linear-gradient(135deg, #2b2f5c, #7c4dc4 60%, #ffb37a); }
-  .n { position:absolute; left: 14px; right: 14px; top: 108px; font: 400 7.5px/1.2 var(--mono); color: #3A3630; text-transform: uppercase; letter-spacing: 0.6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; }
-  .count { position:absolute; left: 92px; top: 166px; width: 136px; text-align:center; font: 400 7px/1 var(--mono); color: #5A5E66; letter-spacing: 1px; }
-  .nav { position:absolute; top: 76px; width: 24px; height: 24px; border-radius: 50%; cursor:pointer; display:flex; align-items:center; justify-content:center; box-sizing: border-box; padding-bottom: 2px;
-         font: 400 16px/1 var(--mono); color: #3A3E45; background: linear-gradient(180deg, #F2F3F5, #C9CCD1); box-shadow: 0 2px 3px rgba(0,0,0,0.3), inset 0 1px 0 #fff, inset 0 0 0 1px #9A9EA5; }
-  .nav.prev { left: 26px; } .nav.next { right: 26px; }
-  .nav:hover { filter: brightness(1.05); } .nav:active { transform: translateY(1px); }
-  .film { position:absolute; left: 22px; right: 22px; top: 184px; height: 54px; overflow:hidden; }
-  .frames { display:flex; gap: 8px; transition: transform .35s cubic-bezier(.3,.7,.3,1); padding: 4px 0 0 4px; }
-  .frame { flex: 0 0 48px; height: 44px; position:relative; border-radius: 1px; cursor:pointer; transform: rotate(var(--r, 0deg));
-           background-color: #F7F4EC; background-size: 34px 24px; background-position: center; background-repeat: no-repeat;
-           box-shadow: 0 2px 4px rgba(0,0,0,0.25), 0 0 0 0.5px rgba(0,0,0,0.2); }
-  .frame::after { content:""; position:absolute; left: 7px; top: 10px; width: 34px; height: 24px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.5); }
-  .frame.on { box-shadow: 0 0 0 2px #B8322C, 0 2px 4px rgba(0,0,0,0.25); }
-  .edge { display:none; }
+
+export const className = card("light", 220, 220, ...LAYOUT.swap) + `
+  padding: 0;
+  .bg    { position:absolute; inset:0; background:
+             radial-gradient(130px at 100% 0%,  ${T.duskAmber},  transparent),
+             radial-gradient(150px at 0% 100%,  ${T.duskPurple}, transparent),
+             radial-gradient(80px  at 68% 42%, rgba(242,128,115,0.7), transparent),
+             ${T.duskBase}; }
+  .img   { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .scrim { position:absolute; inset:0; pointer-events:none;
+           background:linear-gradient(to bottom, rgba(0,0,0,0.3), transparent 25%,
+                       transparent 70%, rgba(0,0,0,0.4)); }
+  .row   { position:absolute; left:14px; right:14px; bottom:14px;
+           display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .nav   { min-width:40px; min-height:40px; display:flex; align-items:center;
+           justify-content:center; cursor:pointer; color:rgba(255,255,255,0.92);
+           font-size:22px; line-height:1; user-select:none;
+           text-shadow:0 0.5px 2px rgba(0,0,0,0.6); }
+  .pips  { display:flex; gap:4px; }
+  .pip   { width:4px; height:4px; border-radius:50%; }
+  .count { font-family:${serif}; font-style:italic; font-size:11px; color:#fff;
+           text-shadow:0 0.5px 2px rgba(0,0,0,0.6); }
 `;
+
 const RS = String.fromCharCode(30);
 const US = String.fromCharCode(31);
 
@@ -437,40 +425,65 @@ const clampIdx = (i) =>
   ITEMS.length ? ((i % ITEMS.length) + ITEMS.length) % ITEMS.length : 0;
 const getIdx = () => clampIdx(parseInt(localStorage.getItem(KEY) || "0", 10) || 0);
 
-const strip = () => document.getElementById("ws-swap-strip");
+// Repaint the preview directly in the DOM; instant, with no command re-run.
 const paint = (idx) => {
-  const it = ITEMS[idx]; if (!it) return;
-  const img = document.getElementById("ws-swap-img"); if (img && it.data) img.src = it.data;
-  const s = strip(); if (s) { Array.from(s.children).forEach((f, i) => f.classList.toggle("on", i === idx)); s.style.transform = `translateX(${Math.max(-(ITEMS.length * 56 - 268), Math.min(0, 100 - idx * 56))}px)`; }
-  const cnt = document.getElementById("ws-swap-count"); if (cnt) cnt.textContent = `Frame ${idx + 1} / ${ITEMS.length}`;
-  const nm = document.getElementById("ws-swap-name"); if (nm) nm.textContent = it.name;
+  const it = ITEMS[idx];
+  if (!it) return;
+  const img = document.getElementById("ws-swap-img");
+  if (img && it.data) img.src = it.data;
+  const pips = document.getElementById("ws-swap-pips");
+  if (pips) Array.from(pips.children).forEach((p, i) => {
+    p.style.background = `rgba(255,255,255,${i === idx ? 0.95 : 0.4})`;
+  });
+  const cnt = document.getElementById("ws-swap-count");
+  if (cnt) cnt.textContent = `${idx + 1} / ${ITEMS.length}`;
+  const root = document.getElementById("ws-swap-root");
+  if (root) root.setAttribute("aria-label", `Wallpaper ${idx + 1} of ${ITEMS.length}: ${it.name}`);
 };
-const step = (delta) => (e) => { if (e && e.stopPropagation) e.stopPropagation(); const next = clampIdx(getIdx() + delta); try { localStorage.setItem(KEY, String(next)); } catch (err) {} paint(next); };
-const pick = (i) => (e) => { if (e && e.stopPropagation) e.stopPropagation(); try { localStorage.setItem(KEY, String(clampIdx(i))); } catch (err) {} paint(clampIdx(i)); };
-const apply = (e) => { if (e && e.stopPropagation) e.stopPropagation(); const it = ITEMS[getIdx()]; if (!it || !it.path) return; run(`osascript -e 'tell application "System Events" to set picture of every desktop to "${esc(it.path)}"'`); };
-const ROT = ["-2deg", "1.5deg", "-1deg", "2deg", "0.5deg"];
+
+// Step the preview only (-1 back, +1 forward); the desktop is left untouched.
+const step = (delta) => (e) => {
+  if (e && e.stopPropagation) e.stopPropagation();
+  const next = clampIdx(getIdx() + delta);
+  try { localStorage.setItem(KEY, String(next)); } catch (err) {}
+  paint(next);
+};
+
+// Set the desktop picture on every display to the currently previewed image.
+const apply = (e) => {
+  if (e && e.stopPropagation) e.stopPropagation();
+  const it = ITEMS[getIdx()];
+  if (!it || !it.path) return;
+  run(`osascript -e 'tell application "System Events" to set picture of every desktop to "${esc(it.path)}"'`);
+};
+
 export const render = (props) => {
   if (isLoading(props)) return <Skel tint={T.duskPurple} />;
   ITEMS = parse(props.output) || MOCK;
-  const idx = getIdx(); const it = ITEMS[idx]; const total = ITEMS.length;
+  const idx = getIdx();
+  const it = ITEMS[idx];
+  const total = ITEMS.length;
+
   return (
     <div id="ws-swap-root" aria-label={`Wallpaper ${idx + 1} of ${total}: ${it.name}`}>
-      <div className="glass" />
       <DragHandle k="swap" />
       <ResizeHandle k="swap" />
-      <div className="mount" title="Set as desktop picture" onClick={apply}>
-        <div className="win">{it.data ? <img id="ws-swap-img" className="img" src={it.data} /> : <div className="bg" />}</div>
-        <span id="ws-swap-name" className="n">{it.name}</span>
-      </div>
-      <span id="ws-swap-count" className="count">Frame {idx + 1} / {total}</span>
-      <span className="nav prev" title="Previous" onClick={step(-1)}>&#x2039;</span>
-      <span className="nav next" title="Next" onClick={step(1)}>&#x203A;</span>
-      <div className="film">
-        <div id="ws-swap-strip" className="frames" style={{ transform: `translateX(${Math.max(-(total * 56 - 268), Math.min(0, 100 - idx * 56))}px)` }}>
-          {ITEMS.map((x, i) => <div key={i} className={`frame ${i === idx ? "on" : ""}`} style={x.data ? { backgroundImage: `url(${x.data})`, "--r": ROT[i % 5] } : { backgroundImage: `linear-gradient(${COLORSAFE(i)}, ${COLORSAFE(i)})`, "--r": ROT[i % 5] }} title={x.name} onClick={pick(i)} />)}
-        </div>
+      {it.data
+        ? <img id="ws-swap-img" className="img" src={it.data} onClick={apply} style={{ cursor: "pointer" }} />
+        : <div className="bg" />}
+      <div className="scrim" />
+      <div className="row">
+        <span className="nav" title="Previous wallpaper" onClick={step(-1)}>&#x2039;</span>
+        {total <= 8
+          ? <span id="ws-swap-pips" className="pips">
+              {Array.from({ length: total }, (_, i) => (
+                <span key={i} className="pip"
+                  style={{ background: `rgba(255,255,255,${i === idx ? 0.95 : 0.4})` }} />
+              ))}
+            </span>
+          : <span id="ws-swap-count" className="count">{idx + 1} / {total}</span>}
+        <span className="nav" title="Next wallpaper" onClick={step(1)}>&#x203A;</span>
       </div>
     </div>
   );
 };
-const COLORSAFE = (i) => [T.duskBase, T.duskPurple, T.shaderPurple, T.shaderTeal][i % 4];

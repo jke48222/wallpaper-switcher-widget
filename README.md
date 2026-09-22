@@ -1,6 +1,6 @@
 # wallpaper-switcher
 
-> Browse and set your desktop wallpaper from a photographer's light table of 35 mm slides.
+> Browse and set your desktop wallpaper from ~/Pictures/Wallpapers.
 
 [![Release](https://img.shields.io/github/v/release/jke48222/wallpaper-switcher-widget?label=release)](https://github.com/jke48222/wallpaper-switcher-widget/releases/latest) [![License: MIT](https://img.shields.io/github/license/jke48222/wallpaper-switcher-widget)](LICENSE) ![Platform: macOS](https://img.shields.io/badge/platform-macOS-lightgrey)
 
@@ -12,17 +12,13 @@ runs on any Mac with no extra files beyond the bundled assets.
 
 ![screenshot](media/screenshot.png)
 
-A photographer's light table: a brushed aluminium frame around a glowing acrylic top, the chosen wallpaper in a cardboard 35 mm slide mount, the rest as small mounts along the bottom. Buttons step, click a mount to select it, click the big slide to set it as the desktop picture. Typeface: Courier Prime. All fonts are under the SIL Open Font License; see `wallpaper-switcher.widget/fonts/OFL.txt`.
-
-## Before and after
-
-![Before and after](media/before-after.png)
-
 ### On the desktop
 
 The widget running alongside the full set:
 
-![The Übersicht widget suite composed on one desktop](https://raw.githubusercontent.com/jke48222/widget-suite/main/homescreen.png)
+![The Übersicht widget suite running on a desktop](https://raw.githubusercontent.com/jke48222/widget-suite/main/homescreen.gif)
+
+[Full-resolution video](media/homescreen.mp4)
 
 ## Requirements
 
@@ -67,23 +63,19 @@ the inlined design-system block at the top of `index.jsx`.
 
 ## Related widgets
 
-Part of the [Übersicht Widget Suite](https://github.com/jke48222/widget-suite): 16 widgets that share one design system.
+Part of the [Übersicht Widget Suite](https://github.com/jke48222/widget-suite): 12 widgets that share one design system.
 
-- [Agent Fleet](https://github.com/jke48222/agent-fleet-widget)
 - [Animated Wallpaper](https://github.com/jke48222/animated-wallpaper-widget)
 - [Clipboard History](https://github.com/jke48222/clipboard-history-widget)
 - [Daily AI Prompt](https://github.com/jke48222/daily-ai-prompt-widget)
 - [Daily Astronomy Photo](https://github.com/jke48222/daily-astronomy-photo-widget)
 - [Daily Tarot](https://github.com/jke48222/daily-tarot-widget)
 - [GitHub Contributions](https://github.com/jke48222/github-contributions-widget)
-- [Keys & Pads](https://github.com/jke48222/keys-and-pads-widget)
 - [Now Playing](https://github.com/jke48222/now-playing-widget)
-- [Pi Fleet](https://github.com/jke48222/pi-fleet-widget)
 - [Recent Album Covers](https://github.com/jke48222/recent-album-covers-widget)
 - [Recent Downloads](https://github.com/jke48222/recent-downloads-widget)
 - [Rotating 3D Model](https://github.com/jke48222/rotating-3d-model-widget)
 - [Spinning Globe](https://github.com/jke48222/spinning-globe-widget)
-- [Window Pet](https://github.com/jke48222/window-pet-widget)
 
 ## License
 
