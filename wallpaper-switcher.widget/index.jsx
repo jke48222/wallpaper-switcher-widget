@@ -366,37 +366,42 @@ export const command =
   `done`;
 
 export const refreshFrequency = 1000 * 60 * 5; // navigation is client-side; only re-scan for added/removed wallpapers
-
 const FONTS = "wallpaper-switcher.widget/fonts";
-// A lightbox: a pale aluminium frame around a glowing glass top, the chosen
-// wallpaper mounted as a slide, and a 35 mm filmstrip of every wallpaper
-// across the bottom with sprocket holes and edge printing. Click a frame to
-// preview it, the slide to set it as the desktop on every display.
-export const className = card("light", 280, 250, ...LAYOUT.swap) + `
-  @font-face { font-family: "Barlow Condensed"; src: url("${FONTS}/BarlowCondensed-600.woff2") format("woff2"); font-weight: 600; }
-  --cond: "Barlow Condensed", "Arial Narrow", sans-serif;
-  padding: 12px; border-radius: 10px; backdrop-filter: none; overflow: hidden; user-select:none; -webkit-user-select:none;
-  background: linear-gradient(180deg, #F1F0EB 0%, #DCDAD3 100%);
-  box-shadow: 0 26px 50px rgba(0,0,0,0.5), inset 0 1px 0 #fff, inset 0 -2px 0 rgba(0,0,0,0.12), 0 0 0 1px #b9b7b0;
-  &::before { content:""; position:absolute; inset:0; pointer-events:none; opacity: 0.6; background: repeating-linear-gradient(90deg, rgba(255,255,255,0.35) 0 1px, rgba(0,0,0,0) 1px 3px); }
-  .ws-drag { top: 4px; left: 4px; color:#777; background: rgba(0,0,0,0.05); } .ws-resize { bottom: 3px; right: 3px; color:#777; background: rgba(0,0,0,0.05); }
-  .glass { position:relative; height: 150px; border-radius: 6px; background: radial-gradient(180px 90px at 50% 40%, #FFFFFF 0%, #F4F3EE 60%, #E4E2DB 100%);
-           box-shadow: inset 0 0 0 1px #c9c7c0, inset 0 2px 8px rgba(0,0,0,0.12), 0 0 14px rgba(255,255,255,0.7); display:flex; align-items:center; justify-content:center; }
-  .slide { position:relative; width: 200px; height: 126px; background: #F7F6F1; border-radius: 3px; box-shadow: 0 6px 14px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.08); padding: 8px 10px; cursor:pointer; }
-  .slide .img { width: 100%; height: 100%; object-fit: cover; display:block; background: #222; }
-  .slide .bg { width:100%; height:100%; background: radial-gradient(130px at 100% 0%, ${T.duskAmber}, transparent), radial-gradient(150px at 0% 100%, ${T.duskPurple}, transparent), ${T.duskBase}; }
-  .slide .n { position:absolute; left: 12px; bottom: -1px; font: 600 7px/1 var(--cond); letter-spacing: 1.4px; color:#8A8378; text-transform:uppercase; }
-  .film { position:relative; margin-top: 10px; height: 58px; border-radius: 2px; background: #171717; box-shadow: inset 0 0 0 1px #000, 0 2px 4px rgba(0,0,0,0.3); overflow:hidden; }
-  .film::before, .film::after { content:""; position:absolute; left:0; right:0; height: 6px; background: radial-gradient(3px 2.5px at 6px 50%, #DCDAD3 95%, transparent 100%) 0 0 / 12px 6px repeat-x; }
-  .film::before { top: 3px; } .film::after { bottom: 3px; }
-  .frames { position:absolute; left: 0; top: 11px; height: 36px; display:flex; gap: 4px; padding: 0 6px; transition: transform .25s ease; }
-  .frame { width: 52px; height: 36px; flex:none; background-size:cover; background-position:center; background-color:#3a3a3a; cursor:pointer; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
-  .frame.on { box-shadow: 0 0 0 2px #F5561E, inset 0 0 0 1px rgba(255,255,255,0.3); }
-  .edge { position:absolute; left: 8px; bottom: 0px; font: 600 5.5px/6px var(--cond); letter-spacing: 1.6px; color: #8a7a4a; text-transform:uppercase; white-space:nowrap; }
-  .nav { position:absolute; top: 60px; width: 26px; height: 26px; border-radius: 50%; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#3a3a3a; font-size: 16px; line-height:1;
-         background: linear-gradient(180deg, #FDFDFB, #E4E2DB); box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 1px 0 #fff; }
-  .nav.prev { left: 16px; } .nav.next { right: 16px; }
-  .count { position:absolute; right: 14px; top: 4px; font: 600 7.5px/1 var(--cond); letter-spacing: 1.6px; color:#8A8378; text-transform:uppercase; }
+// A photographer's light table: a brushed aluminium frame around a glowing
+// acrylic top, the chosen wallpaper in a cardboard 35 mm slide mount, the rest
+// as small mounts along the bottom. Buttons step, click a mount to select,
+// click the big slide to set it as the desktop picture.
+export const className = card("light", 320, 256, ...LAYOUT.swap) + `
+  @font-face { font-family: "Courier Prime"; src: url("${FONTS}/CourierPrime-400.woff2") format("woff2"); }
+  --mono: "Courier Prime", monospace;
+  padding: 0; border-radius: 8px; backdrop-filter: none; overflow: hidden; user-select:none; -webkit-user-select:none;
+  background: linear-gradient(180deg, #D9DBDE 0%, #BFC2C6 100%);
+  box-shadow: 0 30px 50px rgba(0,0,0,0.45), inset 0 1px 0 #fff, inset 0 0 0 1px #8F9399, inset 0 -1px 0 rgba(0,0,0,0.3);
+  &::before { content:""; position:absolute; inset:0; pointer-events:none; opacity: 0.5; background: repeating-linear-gradient(90deg, rgba(255,255,255,0.15) 0 1px, rgba(0,0,0,0) 1px 3px); }
+  .ws-drag { top: 0px; left: 0px; color: #4a4e55; background: rgba(0,0,0,0.06); } .ws-resize { bottom: 0px; right: 0px; color: #4a4e55; background: rgba(0,0,0,0.06); }
+  .glass { position:absolute; inset: 10px; border-radius: 4px; background: radial-gradient(ellipse 70% 60% at 50% 45%, #FFFFFF 0%, #F2F4F6 60%, #DDE1E6 100%); box-shadow: inset 0 0 0 1px #A9ADB3, inset 0 2px 8px rgba(0,0,0,0.25), 0 0 18px rgba(255,255,255,0.35); }
+  .glass::after { content:""; position:absolute; inset:0; border-radius: inherit; pointer-events:none; opacity: 0.55; mix-blend-mode: multiply; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E"); }
+  .mount { position:absolute; left: 92px; top: 20px; width: 136px; height: 136px; cursor:pointer; background: #F7F4EC; border-radius: 2px; transform: rotate(-1.5deg);
+           box-shadow: 0 6px 12px rgba(0,0,0,0.28), 0 0 0 0.5px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(0,0,0,0.05); }
+  .mount::before { content:"COLOR TRANSPARENCY"; position:absolute; left: 0; right: 0; top: 9px; text-align:center; font: 400 6.5px/1 var(--mono); letter-spacing: 1.4px; color: #B8322C; }
+  .mount::after { content:"PROCESSED · MOUNTED"; position:absolute; left: 0; right: 0; bottom: 8px; text-align:center; font: 400 6px/1 var(--mono); letter-spacing: 1px; color: #7A7466; }
+  .win { position:absolute; left: 14px; top: 30px; width: 108px; height: 72px; overflow:hidden; background: #111; box-shadow: inset 0 0 0 1px #000, 0 0 0 1px rgba(0,0,0,0.15); }
+  .img { width: 100%; height: 100%; object-fit: cover; display:block; }
+  .bg { width: 100%; height: 100%; background: linear-gradient(135deg, #2b2f5c, #7c4dc4 60%, #ffb37a); }
+  .n { position:absolute; left: 14px; right: 14px; top: 108px; font: 400 7.5px/1.2 var(--mono); color: #3A3630; text-transform: uppercase; letter-spacing: 0.6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; }
+  .count { position:absolute; left: 92px; top: 166px; width: 136px; text-align:center; font: 400 7px/1 var(--mono); color: #5A5E66; letter-spacing: 1px; }
+  .nav { position:absolute; top: 76px; width: 24px; height: 24px; border-radius: 50%; cursor:pointer; display:flex; align-items:center; justify-content:center; box-sizing: border-box; padding-bottom: 2px;
+         font: 400 16px/1 var(--mono); color: #3A3E45; background: linear-gradient(180deg, #F2F3F5, #C9CCD1); box-shadow: 0 2px 3px rgba(0,0,0,0.3), inset 0 1px 0 #fff, inset 0 0 0 1px #9A9EA5; }
+  .nav.prev { left: 26px; } .nav.next { right: 26px; }
+  .nav:hover { filter: brightness(1.05); } .nav:active { transform: translateY(1px); }
+  .film { position:absolute; left: 22px; right: 22px; top: 184px; height: 54px; overflow:hidden; }
+  .frames { display:flex; gap: 8px; transition: transform .35s cubic-bezier(.3,.7,.3,1); padding: 4px 0 0 4px; }
+  .frame { flex: 0 0 48px; height: 44px; position:relative; border-radius: 1px; cursor:pointer; transform: rotate(var(--r, 0deg));
+           background-color: #F7F4EC; background-size: 34px 24px; background-position: center; background-repeat: no-repeat;
+           box-shadow: 0 2px 4px rgba(0,0,0,0.25), 0 0 0 0.5px rgba(0,0,0,0.2); }
+  .frame::after { content:""; position:absolute; left: 7px; top: 10px; width: 34px; height: 24px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.5); }
+  .frame.on { box-shadow: 0 0 0 2px #B8322C, 0 2px 4px rgba(0,0,0,0.25); }
+  .edge { display:none; }
 `;
 const RS = String.fromCharCode(30);
 const US = String.fromCharCode(31);
@@ -436,35 +441,34 @@ const strip = () => document.getElementById("ws-swap-strip");
 const paint = (idx) => {
   const it = ITEMS[idx]; if (!it) return;
   const img = document.getElementById("ws-swap-img"); if (img && it.data) img.src = it.data;
-  const s = strip(); if (s) { Array.from(s.children).forEach((f, i) => f.classList.toggle("on", i === idx)); s.style.transform = `translateX(${Math.max(-(ITEMS.length * 56 - 244), Math.min(0, 100 - idx * 56))}px)`; }
+  const s = strip(); if (s) { Array.from(s.children).forEach((f, i) => f.classList.toggle("on", i === idx)); s.style.transform = `translateX(${Math.max(-(ITEMS.length * 56 - 268), Math.min(0, 100 - idx * 56))}px)`; }
   const cnt = document.getElementById("ws-swap-count"); if (cnt) cnt.textContent = `Frame ${idx + 1} / ${ITEMS.length}`;
   const nm = document.getElementById("ws-swap-name"); if (nm) nm.textContent = it.name;
 };
 const step = (delta) => (e) => { if (e && e.stopPropagation) e.stopPropagation(); const next = clampIdx(getIdx() + delta); try { localStorage.setItem(KEY, String(next)); } catch (err) {} paint(next); };
 const pick = (i) => (e) => { if (e && e.stopPropagation) e.stopPropagation(); try { localStorage.setItem(KEY, String(clampIdx(i))); } catch (err) {} paint(clampIdx(i)); };
 const apply = (e) => { if (e && e.stopPropagation) e.stopPropagation(); const it = ITEMS[getIdx()]; if (!it || !it.path) return; run(`osascript -e 'tell application "System Events" to set picture of every desktop to "${esc(it.path)}"'`); };
+const ROT = ["-2deg", "1.5deg", "-1deg", "2deg", "0.5deg"];
 export const render = (props) => {
   if (isLoading(props)) return <Skel tint={T.duskPurple} />;
   ITEMS = parse(props.output) || MOCK;
   const idx = getIdx(); const it = ITEMS[idx]; const total = ITEMS.length;
   return (
     <div id="ws-swap-root" aria-label={`Wallpaper ${idx + 1} of ${total}: ${it.name}`}>
+      <div className="glass" />
       <DragHandle k="swap" />
       <ResizeHandle k="swap" />
-      <span id="ws-swap-count" className="count">Frame {idx + 1} / {total}</span>
-      <div className="glass">
-        <div className="slide" title="Set as desktop picture" onClick={apply}>
-          {it.data ? <img id="ws-swap-img" className="img" src={it.data} /> : <div className="bg" />}
-          <span id="ws-swap-name" className="n">{it.name}</span>
-        </div>
+      <div className="mount" title="Set as desktop picture" onClick={apply}>
+        <div className="win">{it.data ? <img id="ws-swap-img" className="img" src={it.data} /> : <div className="bg" />}</div>
+        <span id="ws-swap-name" className="n">{it.name}</span>
       </div>
+      <span id="ws-swap-count" className="count">Frame {idx + 1} / {total}</span>
       <span className="nav prev" title="Previous" onClick={step(-1)}>&#x2039;</span>
       <span className="nav next" title="Next" onClick={step(1)}>&#x203A;</span>
       <div className="film">
-        <div id="ws-swap-strip" className="frames" style={{ transform: `translateX(${Math.max(-(total * 56 - 244), Math.min(0, 100 - idx * 56))}px)` }}>
-          {ITEMS.map((x, i) => <div key={i} className={`frame ${i === idx ? "on" : ""}`} style={x.data ? { backgroundImage: `url(${x.data})` } : { background: COLORSAFE(i) }} title={x.name} onClick={pick(i)} />)}
+        <div id="ws-swap-strip" className="frames" style={{ transform: `translateX(${Math.max(-(total * 56 - 268), Math.min(0, 100 - idx * 56))}px)` }}>
+          {ITEMS.map((x, i) => <div key={i} className={`frame ${i === idx ? "on" : ""}`} style={x.data ? { backgroundImage: `url(${x.data})`, "--r": ROT[i % 5] } : { backgroundImage: `linear-gradient(${COLORSAFE(i)}, ${COLORSAFE(i)})`, "--r": ROT[i % 5] }} title={x.name} onClick={pick(i)} />)}
         </div>
-        <span className="edge">Safety film · {String(total).padStart(2, "0")} frames · wallpapers</span>
       </div>
     </div>
   );

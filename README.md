@@ -1,6 +1,6 @@
 # wallpaper-switcher
 
-> Browse and set your desktop wallpaper from ~/Pictures/Wallpapers.
+> Browse and set your desktop wallpaper from a photographer's light table of 35 mm slides.
 
 [![Release](https://img.shields.io/github/v/release/jke48222/wallpaper-switcher-widget?label=release)](https://github.com/jke48222/wallpaper-switcher-widget/releases/latest) [![License: MIT](https://img.shields.io/github/license/jke48222/wallpaper-switcher-widget)](LICENSE) ![Platform: macOS](https://img.shields.io/badge/platform-macOS-lightgrey)
 
@@ -12,7 +12,7 @@ runs on any Mac with no extra files beyond the bundled assets.
 
 ![screenshot](media/screenshot.png)
 
-A lightbox: a pale aluminium frame around a glowing glass top, the chosen wallpaper mounted as a slide, and a 35 mm filmstrip of every wallpaper across the bottom with sprocket holes and edge printing. Typeface: Barlow Condensed. All fonts are under the SIL Open Font License; see `wallpaper-switcher.widget/fonts/OFL.txt`.
+A photographer's light table: a brushed aluminium frame around a glowing acrylic top, the chosen wallpaper in a cardboard 35 mm slide mount, the rest as small mounts along the bottom. Buttons step, click a mount to select it, click the big slide to set it as the desktop picture. Typeface: Courier Prime. All fonts are under the SIL Open Font License; see `wallpaper-switcher.widget/fonts/OFL.txt`.
 
 ## Before and after
 
